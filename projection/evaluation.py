@@ -148,16 +148,22 @@ def calc_inception(gen, batchsize=100, dst=None, path=None, n_ims=50000, splits=
 
 
 def _load_images_batch(paths: list[pathlib.Path]) -> list[np.ndarray]:
+    if isinstance(paths, np.ndarray):
+        return paths # Already loaded
+
     images = []
     for path in paths:
-        image = np.array(Image.open(path).convert('RGB')).astype(np.uint8)
+        if isinstance(path, np.ndarray):
+            image = path  # Already loaded
+        else:
+            image = np.array(Image.open(str(path)).convert('RGB')).astype(np.uint8)
         images.append(image)
     # Reference samples
     all_ref_samples = np.stack(images, axis=0).transpose((0, 3, 1, 2)).astype(np.float32)
     return all_ref_samples
 
 
-def get_mean_cov(model, ims: list[pathlib.Path], batch_size=500):
+def get_mean_cov(model, ims: list[pathlib.Path], batch_size=128):
     n = len(ims)
     n_batches = int(math.ceil(float(n) / float(batch_size)))
     xp = model.xp
@@ -166,7 +172,7 @@ def get_mean_cov(model, ims: list[pathlib.Path], batch_size=500):
     print('Total number of batches:', n_batches)
     ys = xp.empty((n, 2048), dtype=xp.float32)
     for i in range(n_batches):
-        print('Running batch', i + 1, '/', n_batches, '...')
+        print('\rRunning batch', i + 1, '/', n_batches, '...', end='')
         batch_start = (i * batch_size)
         batch_end = min((i + 1) * batch_size, n)
 
@@ -184,6 +190,7 @@ def get_mean_cov(model, ims: list[pathlib.Path], batch_size=500):
         with chainer.using_config('train', False), chainer.using_config('enable_backprop', False):
             y = model(ims_batch, get_feature=True)
         ys[batch_start:batch_end] = y.data
+    print()
 
     mean = xp.mean(ys, axis=0).get()
     # cov = F.cross_covariance(ys, ys, reduce="no").datasets.get()
