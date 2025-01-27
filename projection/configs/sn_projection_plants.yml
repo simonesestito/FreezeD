@@ -15,14 +15,16 @@ models:
       dim_z: 128
       bottom_width: 4
       ch: 64
-      n_classes: 64
+      n_classes_src: 1000
+      n_classes_tgt: 64
 
   discriminator:
       fn: dis_models/snresnet.py
       name: SNResNetProjectionDiscriminator
       args:
         ch: 64
-        n_classes: 64
+        n_classes_src: 1000
+        n_classes_tgt: 64
 
 dataset:
   dataset_fn: datasets/plants.py
@@ -46,3 +48,11 @@ updater:
     n_gen_samples: 32
     conditional: True
     loss_type: hinge
+
+pretrained:
+  gen: './pretrained/sn_projection_128/ResNetGenerator_850000.npz'
+  dis: './pretrained/sn_projection_128/SNResNetProjectionDiscriminator_850000.npz'
+
+eval:
+  inception_path: datasets/inception_model
+  stat_file: datasets/plants_resized_stats/full.npz
