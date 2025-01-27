@@ -1,11 +1,11 @@
 batchsize: 32
-iteration: 20000
-iteration_decay_start: 12000
+iteration: 3000
+iteration_decay_start: 2400
 seed: 0
 display_interval: 100
 progressbar_interval: 100
-snapshot_interval: 1000
-evaluation_interval: 1000
+snapshot_interval: 300
+evaluation_interval: 300
 
 models:
   generator:
