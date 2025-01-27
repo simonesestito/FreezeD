@@ -1,6 +1,7 @@
 import os
 import sys
 import math
+import pathlib
 
 import numpy as np
 from PIL import Image
@@ -146,8 +147,18 @@ def calc_inception(gen, batchsize=100, dst=None, path=None, n_ims=50000, splits=
     return evaluation
 
 
-def get_mean_cov(model, ims, batch_size=100):
-    n, c, w, h = ims.shape
+def _load_images_batch(paths: list[pathlib.Path]) -> list[np.ndarray]:
+    images = []
+    for path in paths:
+        image = np.array(Image.open(path).convert('RGB')).astype(np.uint8)
+        images.append(image)
+    # Reference samples
+    all_ref_samples = np.stack(images, axis=0).transpose((0, 3, 1, 2)).astype(np.float32)
+    return all_ref_samples
+
+
+def get_mean_cov(model, ims: list[pathlib.Path], batch_size=500):
+    n = len(ims)
     n_batches = int(math.ceil(float(n) / float(batch_size)))
     xp = model.xp
     print('Batch size:', batch_size)
@@ -160,6 +171,8 @@ def get_mean_cov(model, ims, batch_size=100):
         batch_end = min((i + 1) * batch_size, n)
 
         ims_batch = ims[batch_start:batch_end]
+        ims_batch = _load_images_batch(ims_batch)
+        _, c, w, h = ims_batch.shape  # (N, C, W, H)
         ims_batch = xp.asarray(ims_batch)  # To GPU if using CuPy
         ims_batch = Variable(ims_batch)
 

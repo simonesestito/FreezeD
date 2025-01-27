@@ -1,5 +1,6 @@
 import os, sys
 import numpy as np
+import pathlib
 import argparse
 import chainer
 
@@ -25,6 +26,15 @@ def get_imagenet_samples(c=None):
     return all_ref_samples
 
 
+def get_samples_filenames(c=None) -> list[pathlib.Path]:
+    images = []
+    for filename, label in train_filenames_and_labels:
+        if c is not None and int(label) != c:
+            continue
+        images.append(os.path.join(DATA_ROOT, filename))
+    return images
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu', '-g', type=int, default=0)
@@ -41,7 +51,7 @@ if __name__ == '__main__':
     LABEL_LIST_PATH = f'./datasets/image_list_{args.dataset}.txt'
     train_filenames_and_labels = np.loadtxt(LABEL_LIST_PATH, dtype=np.str_)
 
-    get_samples = get_imagenet_samples
+    get_samples = get_samples_filenames
 
     stat_dir = f'./datasets/{args.dataset}_stats'
     if not os.path.exists(stat_dir):
