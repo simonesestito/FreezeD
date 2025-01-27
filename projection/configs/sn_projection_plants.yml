@@ -1,4 +1,4 @@
-batchsize: 96
+batchsize: 32
 iteration: 20000
 iteration_decay_start: 12000
 seed: 0
