@@ -7,7 +7,8 @@ base = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(base, '../'))
 from evaluation import load_inception_model
 
-import scipy.ndimage as ndimage
+from PIL import Image
+import numpy as np
 
 
 def get_imagenet_samples(c=None):
@@ -16,8 +17,7 @@ def get_imagenet_samples(c=None):
     for filename, label in train_filenames_and_labels:
         if c is not None and int(label) != c:
             continue
-        image = ndimage.imread(os.path.join(DATA_ROOT, filename), mode='RGB')
-        image = np.asarray(image, dtype=np.uint8)
+        image = np.array(Image.open(os.path.join(DATA_ROOT, filename)).convert('RGB')).astype(np.uint8)
         images.append(image)
         count += 1
     # Reference samples
