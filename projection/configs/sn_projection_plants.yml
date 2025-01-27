@@ -57,4 +57,4 @@ pretrained:
 
 eval:
   inception_path: datasets/inception_model
-  stat_file: datasets/plants_resized_stats/full.npz
+  stat_file: datasets/plants_stats/full.npz
