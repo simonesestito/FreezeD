@@ -42,12 +42,14 @@ adam:
 
 updater:
   fn: updater.py
-  name: Updater
+  name: FinetuneUpdater
   args:
     n_dis: 5
     n_gen_samples: 32
     conditional: True
     loss_type: hinge
+    FM_layer: -1
+    lambda_FM: 0
 
 pretrained:
   gen: './pretrained/sn_projection_128/ResNetGenerator_850000.npz'
