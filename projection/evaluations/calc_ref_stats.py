@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     DATA_ROOT = f'./datasets/{args.dataset}'
     LABEL_LIST_PATH = f'./datasets/image_list_{args.dataset}.txt'
-    train_filenames_and_labels = np.loadtxt(LABEL_LIST_PATH, dtype=np.str)
+    train_filenames_and_labels = np.loadtxt(LABEL_LIST_PATH, dtype=np.str_)
 
     get_samples = get_imagenet_samples
 
