@@ -8,7 +8,6 @@ sys.path.append(os.path.join(base, '../'))
 from evaluation import load_inception_model
 
 import scipy.ndimage as ndimage
-from scipy.misc import imresize
 
 
 def get_imagenet_samples(c=None):
