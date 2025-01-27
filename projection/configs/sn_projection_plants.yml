@@ -4,8 +4,8 @@ iteration_decay_start: 2400
 seed: 0
 display_interval: 100
 progressbar_interval: 100
-snapshot_interval: 300
-evaluation_interval: 300
+snapshot_interval: 500
+evaluation_interval: 500
 
 models:
   generator:
