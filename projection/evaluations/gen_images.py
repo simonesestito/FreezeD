@@ -14,6 +14,8 @@ import source.yaml_utils as yaml_utils
 
 def load_models(config):
     gen_conf = config.models['generator']
+    gen_conf['args']['n_classes'] = gen_conf['args']['n_classes_src']
+    gen_conf['args'].pop('n_classes_src')
     gen = yaml_utils.load_model(gen_conf['fn'], gen_conf['name'], gen_conf['args'])
     return gen
 
