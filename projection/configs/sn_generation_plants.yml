@@ -15,16 +15,7 @@ models:
       dim_z: 128
       bottom_width: 4
       ch: 64
-      n_classes_src: 1000
-      n_classes_tgt: 64
-
-  discriminator:
-      fn: dis_models/snresnet.py
-      name: SNResNetProjectionDiscriminator
-      args:
-        ch: 64
-        n_classes_src: 1000
-        n_classes_tgt: 64
+      n_classes: 1000
 
 dataset:
   dataset_fn: datasets/plants.py
