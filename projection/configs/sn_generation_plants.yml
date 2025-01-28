@@ -1,0 +1,60 @@
+batchsize: 32
+iteration: 3000
+iteration_decay_start: 2400
+seed: 0
+display_interval: 100
+progressbar_interval: 100
+snapshot_interval: 500
+evaluation_interval: 500
+
+models:
+  generator:
+    fn: gen_models/resnet.py
+    name: ResNetGenerator
+    args:
+      dim_z: 128
+      bottom_width: 4
+      ch: 64
+      n_classes_src: 1000
+      n_classes_tgt: 64
+
+  discriminator:
+      fn: dis_models/snresnet.py
+      name: SNResNetProjectionDiscriminator
+      args:
+        ch: 64
+        n_classes_src: 1000
+        n_classes_tgt: 64
+
+dataset:
+  dataset_fn: datasets/plants.py
+  dataset_name: PlantsDataset
+  args:
+    path: datasets/image_list.txt
+    size: 128
+    resize_method: bilinear
+    augmentation: False
+
+adam:
+  alpha: 0.0002
+  beta1: 0.0
+  beta2: 0.9
+
+updater:
+  fn: updater.py
+  name: FinetuneUpdater
+  args:
+    n_dis: 5
+    n_gen_samples: 32
+    conditional: True
+    loss_type: hinge
+    FM_layer: -1
+    lambda_FM: 0
+
+pretrained:
+  gen: '/content/drive/MyDrive/CV Project/sn_plants_conditional/ResNetGenerator_best.npz'
+  dis: '/content/drive/MyDrive/CV Project/sn_plants_conditional/SNResNetProjectionDiscriminator_best.npz'
+
+eval:
+  inception_path: datasets/inception_model
+  stat_file: datasets/plants_stats/full.npz
