@@ -6,4 +6,4 @@ models:
       dim_z: 128
       bottom_width: 4
       ch: 64
-      n_classes: 1000
+      n_classes: 64
