@@ -38,17 +38,18 @@ def main():
     np.random.seed(1234)
     classes = tuple(args.classes) if args.classes is not None else np.arange(0, gen.n_classes, dtype=np.int32)
     for c in classes:
-        with chainer.using_config('train', False), chainer.using_config('enable_backprop', False):
-            x = gen_images_with_condition(gen, c=c, n=args.rows * args.columns, batchsize=args.rows * args.columns)
-        _, _, h, w = x.shape
-        x = x.reshape((args.rows, args.columns, 3, h, w))
-        x = x.transpose(0, 3, 1, 4, 2)
-        x = x.reshape((args.rows * h, args.columns * w, 3))
+        for i in range(20):
+            with chainer.using_config('train', False), chainer.using_config('enable_backprop', False):
+                x = gen_images_with_condition(gen, c=c, n=args.rows * args.columns, batchsize=args.rows * args.columns)
+            _, _, h, w = x.shape
+            x = x.reshape((args.rows, args.columns, 3, h, w))
+            x = x.transpose(0, 3, 1, 4, 2)
+            x = x.reshape((args.rows * h, args.columns * w, 3))
 
-        save_path = os.path.join(out, '{}.png'.format(str(c)))
-        if not os.path.exists(out):
-            os.makedirs(out)
-        Image.fromarray(x).save(save_path)
+            save_path = os.path.join(out, 'class_{}_run_{}.png'.format(str(c), str(i)))
+            if not os.path.exists(out):
+                os.makedirs(out)
+            Image.fromarray(x).save(save_path)
 
 
 if __name__ == '__main__':
