@@ -36,20 +36,22 @@ def main():
     out = args.results_dir
     chainer.serializers.load_npz(args.snapshot, gen)
     np.random.seed(1234)
-    classes = [35, 39, 12, 22, 43, 24, 41, 42, 51, 29, 59, 5, 31, 11, 20, 27, 32, 36, 61, 13, 0, 60, 44, 7, 34, 54, 6]
+    run = 3
+    # classes = [35, 39, 12, 22, 43, 24, 41, 42, 51, 29, 59, 5, 31, 11, 20, 27, 32, 36, 61, 13, 0, 60, 44, 7, 34, 54, 6]
+    classes = [56, 25, 16, 30, 49, 10, 6, 17, 1, 28, 21, 50, 37, 45, 14, 53]
     for c in classes:
-        for i in range(3):
-            with chainer.using_config('train', False), chainer.using_config('enable_backprop', False):
-                x = gen_images_with_condition(gen, c=c, n=args.rows * args.columns, batchsize=args.rows * args.columns)
-            _, _, h, w = x.shape
-            x = x.reshape((args.rows, args.columns, 3, h, w))
-            x = x.transpose(0, 3, 1, 4, 2)
-            x = x.reshape((args.rows * h, args.columns * w, 3))
+        # for i in range(run):
+        with chainer.using_config('train', False), chainer.using_config('enable_backprop', False):
+            x = gen_images_with_condition(gen, c=c, n=args.rows * args.columns, batchsize=args.rows * args.columns)
+        _, _, h, w = x.shape
+        x = x.reshape((args.rows, args.columns, 3, h, w))
+        x = x.transpose(0, 3, 1, 4, 2)
+        x = x.reshape((args.rows * h, args.columns * w, 3))
 
-            save_path = os.path.join(out, 'class_{}_run_{}.png'.format(str(c), str(i)))
-            if not os.path.exists(out):
-                os.makedirs(out)
-            Image.fromarray(x).save(save_path)
+        save_path = os.path.join(out, 'class_{}_run_{}.png'.format(str(c), str(0)))
+        if not os.path.exists(out):
+            os.makedirs(out)
+        Image.fromarray(x).save(save_path)
 
 
 if __name__ == '__main__':
