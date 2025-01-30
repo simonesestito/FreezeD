@@ -39,7 +39,7 @@ def main():
     # classes = [35, 39, 12, 22, 43, 24, 41, 42, 51, 29, 59, 5, 31, 11, 20, 27, 32, 36, 61, 13, 0, 60, 44, 7, 34, 54, 6]
     classes = [56, 25, 16, 30, 49, 10, 6, 17, 1, 28, 21, 50, 37, 45, 14, 53]
     for c in classes:
-        for i in range(3):
+        for i in range(20):
             with chainer.using_config('train', False), chainer.using_config('enable_backprop', False):
                 x = gen_images_with_condition(gen, c=c, n=args.rows * args.columns, batchsize=args.rows * args.columns)
             _, _, h, w = x.shape
